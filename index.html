@@ -205,6 +205,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .reel-side button:active .rsi{transform:scale(.85)}
 
 /* explore grids */
+.colls{display:flex;gap:12px;overflow-x:auto;padding:4px 16px 8px;-webkit-overflow-scrolling:touch}
+.colls::-webkit-scrollbar{display:none}
+.coll{position:relative;flex-shrink:0;width:158px;height:120px;border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 5px 16px var(--sh1);display:flex;flex-direction:column;justify-content:flex-end;padding:13px;transition:transform .18s var(--ease)}
+.coll:active{transform:scale(.95)}
+.coll .ci{position:absolute;inset:0;background-size:cover;background-position:center}
+.coll .ce{position:absolute;top:10px;left:12px;font-size:22px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.4))}
+.coll .ct{position:relative;color:#fff;font-weight:800;font-size:15px;line-height:1.1;text-shadow:0 1px 8px rgba(0,0,0,.4)}
+.coll .ck2{position:relative;color:rgba(255,255,255,.85);font-size:10.5px;font-weight:600}
 .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:4px 16px}
 .cgrid .cc{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:1/.82;border:1px solid var(--line);box-shadow:0 4px 14px var(--sh1);display:flex;flex-direction:column;justify-content:flex-end;padding:14px;transition:transform .18s var(--ease)}
 .cgrid .cc:active{transform:scale(.96)}
@@ -904,6 +912,9 @@ function viewHome(){
   var dayIdx=parseInt(today().replace(/-/g,""))%CARDS.length;var cd=CARDS[dayIdx];
   h+='<div class="sec"><h2 class="sf">Carte du jour</h2></div>';
   h+='<div class="wrap rv">'+featured(cd)+'</div>';
+  // collections
+  h+='<div class="sec"><h2 class="sf">Explore par thème</h2></div>';
+  h+=collectionsRow();
   // filter chips
   h+='<div class="sec" style="padding-bottom:2px"><h2 class="sf">Pour toi</h2><a onclick="reshuffle()">🎲 Mélanger</a></div>';
   h+=chips();
@@ -936,6 +947,16 @@ function chips(){
   h+='</div>';return h;
 }
 function setFilter(f){S.filter=f;S.src=null;S.feedN=24;R();window.scrollTo({top:0,behavior:'smooth'});}
+var COLLS=[["Philo","Sagesse"],["Espace","L'univers"],["Stratégie","Stratégie"],["Psycho","Le cerveau"],["Mythologie","Mythes du monde"],["Cinéma","Cinéma culte"],["Histoire","Grands récits"],["Arts","Chefs-d'œuvre"],["Science","Vertiges"],["Nature","Le vivant"],["Fun","Croustillant"],["Corps","Le corps"]];
+function collectionsRow(){
+  var h='<div class="colls">';
+  COLLS.forEach(function(c){var k=c[0];if(!CAT[k]||!CATCOUNT[k])return;var ct=CAT[k];
+    h+='<div class="coll" onclick="setFilter(\''+k+'\')" style="background:'+ct.c+'">'+
+       '<div class="ci lzy" data-bg="'+imgUrl(ct.ph,360)+'" style="background-image:linear-gradient(150deg,'+ct.c+'cc,'+ct.c+'88);opacity:.92"></div>'+
+       '<span class="ce">'+ct.e+'</span><span class="ct">'+c[1]+'</span><span class="ck2">'+CATCOUNT[k]+' savoirs</span></div>';
+  });
+  h+='</div>';return h;
+}
 
 /* ---------- POST CARD ---------- */
 function postHTML(c,i){
