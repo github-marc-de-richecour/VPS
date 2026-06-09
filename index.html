@@ -813,7 +813,8 @@ function checkAch(){var nu=[];ACH.forEach(a=>{if(!S.ach.has(a.id)&&a.f()){S.ach.
 const $=document.body;
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function toast(msg){var t=document.getElementById("toast");if(!t)return;t.innerHTML=msg;t.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("show"),2200);}
-function addXP(n){S.xp+=n;}
+function vibrate(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
+function addXP(n){var ol=levelInfo(S.xp).i;S.xp+=n;var nl=levelInfo(S.xp).i;if(nl>ol){setTimeout(function(){toast("🎉 Niveau atteint : "+LVLS[nl]);vibrate([30,40,60]);},250);}}
 function markSeen(id){if(S.seen.has(id))return;S.seen.add(id);addXP(10);var c=CARDMAP[id];if(c)S.cats.add(c.cat);
   if(S.goalDate!==today()){S.goalDate=today();S.goalCount=0;}
   if(S.goalCount<S.goalTarget){S.goalCount++; if(S.goalCount===S.goalTarget)toast("🎯 Objectif du jour atteint ! +50 XP"),addXP(50);}
@@ -1009,7 +1010,7 @@ function collapse(id){S.seen.delete("e"+id);R();}
 function toggleBk(id,el){if(S.bk.has(id)){S.bk.delete(id);}else{S.bk.add(id);addXP(3);}saveProfile();checkAch();
   document.querySelectorAll('.post[data-cid="'+id+'"] .bk').forEach(b=>{b.innerHTML=S.bk.has(id)?'🔖':'🏷️';b.classList.toggle('on',S.bk.has(id));});
   if(S.v==="library")R();updateChips();}
-function react(id,emo,el){S.react[id]=S.react[id]||{};if(S.react[id][emo]){delete S.react[id][emo];el.classList.remove('on');}else{S.react[id][emo]=1;el.classList.add('on','burst');if(emo==='🤯')addXP(5);setTimeout(()=>el.classList.remove('burst'),400);}saveProfile();updateChips();}
+function react(id,emo,el){S.react[id]=S.react[id]||{};if(S.react[id][emo]){delete S.react[id][emo];el.classList.remove('on');}else{S.react[id][emo]=1;el.classList.add('on','burst');vibrate(12);if(emo==='🤯')addXP(5);setTimeout(()=>el.classList.remove('burst'),400);}saveProfile();updateChips();}
 function shareCard(id){var c=CARDMAP[id];var txt=c.ti+" — "+c.s+"\n\nvia Philae";if(navigator.share){navigator.share({title:c.ti,text:txt}).catch(()=>{});}else{navigator.clipboard&&navigator.clipboard.writeText(txt);toast("📋 Copié dans le presse-papier");}}
 
 /* ---------- READER ---------- */
@@ -1057,7 +1058,7 @@ function viewExplore(){
   var h='<div class="search"><span style="font-size:16px;opacity:.5">🔍</span><input id="q" placeholder="Rechercher un savoir, un penseur..." oninput="searchR(this.value)" autocomplete="off"></div>';
   h+='<div id="sres"></div>';
   h+='<div id="exmain">';
-  h+='<div class="sec"><h2 class="sf">Univers</h2></div>';
+  h+='<div class="sec"><h2 class="sf">Univers</h2><span style="font-size:11px;font-weight:700;color:var(--ink4)">'+CARDS.length+' savoirs · '+ACTIVECATS.length+' univers</span></div>';
   h+='<div class="cgrid">';
   ACTIVECATS.forEach(k=>{var n=CATCOUNT[k]||0;
     h+='<div class="cc" onclick="setFilter(\''+k+'\');S.v=\'home\';R()" style="background:linear-gradient(150deg,'+CAT[k].c+'dd,'+CAT[k].c+'99)">'+
