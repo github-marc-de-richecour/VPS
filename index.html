@@ -798,6 +798,8 @@ function saveProfile(){if(!S.profile)return;try{localStorage.setItem(PKEY(S.prof
   xp:S.xp,seen:[...S.seen],bk:[...S.bk],reads:[...S.reads],cats:[...S.cats],react:S.react,
   streak:S.streak,lastDay:S.lastDay,goalDate:S.goalDate,goalCount:S.goalCount,qAns:S.qAns,qOK:S.qOK,ach:[...S.ach],pzDone:[...S.pzDone],finDone:[...S.finDone],aiW:S.aiW||0
 }));}catch(e){}}
+var _saveT=null;
+function saveProfileSoon(){if(_saveT)return;_saveT=setTimeout(function(){_saveT=null;saveProfile();},700);}
 function initProfile(id){
   var d=loadProfile(id)||{};
   S.profile=id;
@@ -843,8 +845,8 @@ function vibrate(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 function addXP(n){var ol=levelInfo(S.xp).i;S.xp+=n;var nl=levelInfo(S.xp).i;if(nl>ol){setTimeout(function(){toast("🎉 Niveau atteint : "+LVLS[nl]);vibrate([30,40,60]);},250);}}
 function markSeen(id){if(S.seen.has(id))return;S.seen.add(id);addXP(10);var c=CARDMAP[id];if(c)S.cats.add(c.cat);
   if(S.goalDate!==today()){S.goalDate=today();S.goalCount=0;}
-  if(S.goalCount<S.goalTarget){S.goalCount++; if(S.goalCount===S.goalTarget)toast("🎯 Objectif du jour atteint ! +50 XP"),addXP(50);}
-  saveProfile();checkAch();updateChips();}
+  if(S.goalCount<S.goalTarget){S.goalCount++; if(S.goalCount===S.goalTarget){toast("🎯 Objectif du jour atteint ! +50 XP");addXP(50);saveProfile();}}
+  saveProfileSoon();checkAch();updateChips();}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 let FEED=shuffle(CARDS);
 function feedList(){
@@ -1696,6 +1698,8 @@ function pzMove(mv){
 }
 
 /* ---------- boot ---------- */
+try{window.addEventListener("beforeunload",function(){if(S.profile)saveProfile();});
+window.addEventListener("visibilitychange",function(){if(document.hidden&&S.profile)saveProfile();});}catch(e){}
 R();
 </script>
 </body>
