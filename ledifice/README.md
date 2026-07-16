@@ -41,12 +41,20 @@ parallélisée sur plusieurs agents.
 > réel de pages. Pour un inventaire exhaustif à 100 %, il faudra compléter côté client
 > (accès FTP/serveur, export CMS, ou déblocage réseau permettant un vrai crawl).
 
+## Résultat (16/07/2026)
+
+**1 279 URLs uniques** retrouvées : **674** pages à l'ancienne UI (HTML numéroté),
+**551** pages à la nouvelle UI (URLs propres), **45** documents PDF, et **9** URLs
+sur deux domaines connexes (`ledifice-4plus.net`, `ledifice-edition.net`).
+C'est une **borne inférieure** (voir la section « Limites » de `site-mapping.md`).
+
 ## Contenu du dossier
 
 | Fichier | Description |
 |---|---|
 | `README.md` | Ce document (contexte, problème, méthode). |
-| `site-mapping.md` | Cartographie complète et commentée du site (à plat + par section). |
-| `urls-ancienne-ui.csv` | Toutes les pages HTML de l'ancien schéma numéroté trouvées. |
-| `urls-nouvelle-ui.csv` | Toutes les pages du nouveau schéma à URLs propres trouvées. |
-| `documents.csv` | Tous les documents (PDF, DOC…) hébergés sur le site. |
+| `site-mapping.md` | Cartographie complète et commentée (synthèse, structure, recouvrement, recommandations). |
+| `urls-ancienne-ui.csv` | Les 674 pages HTML de l'ancien schéma numéroté (`code, url, titre, section_degre`). |
+| `urls-nouvelle-ui.csv` | Les 551 pages du nouveau schéma à URLs propres (`url, titre, section, sous_categorie`). |
+| `documents.csv` | Les 45 documents PDF hébergés sur le site (`code, url, titre, type, section_degre`). |
+| `domaines-connexes.csv` | Les 9 URLs des domaines frères `ledifice-4plus.net` (hauts grades) et `ledifice-edition.net` (boutique). |
